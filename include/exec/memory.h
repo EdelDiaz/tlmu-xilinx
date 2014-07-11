@@ -156,6 +156,7 @@ struct MemoryRegion {
     bool terminates;
     bool romd_mode;
     bool ram;
+    bool tlm; 
     bool readonly; /* For RAM regions */
     bool enabled;
     bool rom_device;
@@ -497,6 +498,17 @@ void memory_region_register_iommu_notifier(MemoryRegion *mr, Notifier *n);
  * @n: the notifier to be removed.
  */
 void memory_region_unregister_iommu_notifier(Notifier *n);
+
+/**
+ * memory_region_is_tlmu_ramd: check whether a memory region is RAMD in TLMu
+ *
+ * Returns %true is a memory region is RAMD defined in TLMu
+ *
+ * @mr: the memory region being queried
+ */
+static inline bool memory_region_is_tlmu_ramd(MemoryRegion *mr){
+    return mr->ops && mr->ram && mr->tlm;
+}
 
 /**
  * memory_region_name: get a memory region's name

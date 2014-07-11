@@ -259,6 +259,9 @@ void tlb_set_page(CPUState *cpu, target_ulong vaddr,
         /* TLB_MMIO for rom/romd handled below */
         addend = (uintptr_t)memory_region_get_ram_ptr(section->mr) + xlat;
     }
+    if(memory_region_is_tlmu_ramd(section->mr)) {
+        address |= TLB_MMIO;
+    }
 
     code_address = address;
     iotlb = memory_region_section_get_iotlb(cpu, section, vaddr, paddr, xlat,
@@ -281,7 +284,8 @@ void tlb_set_page(CPUState *cpu, target_ulong vaddr,
     }
     if (prot & PAGE_WRITE) {
         if ((memory_region_is_ram(section->mr) && section->readonly)
-            || memory_region_is_romd(section->mr)) {
+            || memory_region_is_romd(section->mr)
+            || memory_region_is_tlmu_ramd(section->mr)) {
             /* Write access calls the I/O callback.  */
             te->addr_write = address | TLB_MMIO;
         } else if (memory_region_is_ram(section->mr)

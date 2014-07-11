@@ -1461,7 +1461,7 @@ if test "$stack_protector" != "no" ; then
     if do_cc $QEMU_CFLAGS -Werror $flag -c -o $TMPO $TMPC &&
        compile_prog "-Werror $flag" ""; then
       QEMU_CFLAGS="$QEMU_CFLAGS $flag"
-      LIBTOOLFLAGS="$LIBTOOLFLAGS -Wc,$flag"
+      #LIBTOOLFLAGS="$LIBTOOLFLAGS -Wc,$flag"
       break
     fi
   done
@@ -5164,7 +5164,21 @@ DIRS="$DIRS fsdev"
 DIRS="$DIRS pc-bios/optionrom pc-bios/spapr-rtas pc-bios/s390-ccw"
 DIRS="$DIRS roms/seabios roms/vgabios"
 DIRS="$DIRS qapi-generated"
+DIRS="$DIRS libcacard libcacard/libcacard libcacard/trace"
+DIRS="$DIRS tests/tlmu"
+DIRS="$DIRS tests/tlmu/sc_example"
+DIRS="$DIRS tests/tlmu/cris-guest"
+DIRS="$DIRS tests/tlmu/mipsel-guest"
+DIRS="$DIRS tests/tlmu/arm-guest"
+DIRS="$DIRS tests/tlmu/openrisc-guest"
 FILES="Makefile tests/tcg/Makefile qdict-test-data.txt"
+FILES="$FILES libcacard/Makefile"
+FILES="$FILES tests/tlmu/Makefile"
+FILES="$FILES tests/tlmu/sc_example/Makefile"
+FILES="$FILES tests/tlmu/cris-guest/Makefile tests/tlmu/cris-guest/guest"
+FILES="$FILES tests/tlmu/mipsel-guest/Makefile tests/tlmu/mipsel-guest/guest"
+FILES="$FILES tests/tlmu/arm-guest/Makefile tests/tlmu/arm-guest/guest"
+FILES="$FILES tests/tlmu/openrisc-guest/Makefile tests/tlmu/openrisc-guest/guest"
 FILES="$FILES tests/tcg/cris/Makefile tests/tcg/cris/.gdbinit"
 FILES="$FILES tests/tcg/lm32/Makefile tests/tcg/xtensa/Makefile po/Makefile"
 FILES="$FILES pc-bios/optionrom/Makefile pc-bios/keymaps"

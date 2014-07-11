@@ -50,6 +50,8 @@ static const ElfW_auxv_t *auxv;
 
 void qemu_init_auxval(char **envp)
 {
+    if(!envp) return;
+
     /* The auxiliary vector is located just beyond the initial environment.  */
     while (*envp++ != NULL) {
         continue;

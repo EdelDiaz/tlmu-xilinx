@@ -297,6 +297,7 @@ typedef struct GDBState {
     uint8_t last_packet[MAX_PACKET_LENGTH + 4];
     int last_packet_len;
     int signal;
+    int client_connected;
 #ifdef CONFIG_USER_ONLY
     int fd;
     int running_state;
@@ -1174,8 +1175,16 @@ static int gdb_handle_packet(GDBState *s, const char *line_buf)
 
 void gdb_set_stop_cpu(CPUState *cpu)
 {
+    if (!gdbserver_state) {
+        return;
+    }
     gdbserver_state->c_cpu = cpu;
     gdbserver_state->g_cpu = cpu;
+}
+
+int gdbserver_has_client(void)
+{
+    return gdbserver_state && gdbserver_state->client_connected;
 }
 
 #ifndef CONFIG_USER_ONLY
@@ -1482,6 +1491,7 @@ gdb_handlesig(CPUState *cpu, int sig)
         } else if (n == 0 || errno != EAGAIN) {
             /* XXX: Connection closed.  Should probably wait for another
                connection before continuing.  */
+            s->client_connected = 0;
             return sig;
         }
     }
@@ -1536,6 +1546,7 @@ static void gdb_accept(void)
     gdb_has_xml = false;
 
     gdbserver_state = s;
+    s->client_connected = 1;
 
     fcntl(fd, F_SETFL, O_NONBLOCK);
 }
@@ -1621,6 +1632,11 @@ static void gdb_chr_event(void *opaque, int event)
     case CHR_EVENT_OPENED:
         vm_stop(RUN_STATE_PAUSED);
         gdb_has_xml = false;
+        gdbserver_state->client_connected = 1;
+        break;
+    case CHR_EVENT_CLOSED:
+        g_free(gdbserver_state);
+        gdbserver_state->client_connected = 0;
         break;
     default:
         break;

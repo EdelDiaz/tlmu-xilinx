@@ -378,7 +378,7 @@ static ObjectClass *arm_cpu_class_by_name(const char *cpu_model)
         return NULL;
     }
 
-    typename = g_strdup_printf("%s-" TYPE_ARM_CPU, cpu_model);
+    typename = g_strdup_printf("arm.%s", cpu_model);
     oc = object_class_by_name(typename);
     g_free(typename);
     if (!oc || !object_class_dynamic_cast(oc, TYPE_ARM_CPU) ||

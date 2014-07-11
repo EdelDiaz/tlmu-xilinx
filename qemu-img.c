@@ -69,12 +69,9 @@ static void print_format(gpointer data, gpointer user)
 static void add_format_to_seq(void *opaque, const char *fmt_name)
 {
     GSequence *seq = opaque;
-
-    if (!g_sequence_lookup(seq, (gpointer)fmt_name,
-                           compare_data, NULL)) {
-        g_sequence_insert_sorted(seq, (gpointer)fmt_name,
-                                 compare_data, NULL);
-    }
+    
+    g_sequence_insert_sorted(seq, (gpointer)fmt_name,
+                             compare_data, NULL);
 }
 
 static void QEMU_NORETURN GCC_FMT_ATTR(1, 2) error_exit(const char *fmt, ...)

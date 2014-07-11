@@ -1,2 +1,5 @@
 obj-y += boot.o
 obj-y += axis_dev88.o
+obj-y += ../tlm_mach.o
+obj-y += ../tlm_mem.o
+obj-y += ../ptimer.o
