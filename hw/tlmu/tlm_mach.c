@@ -104,7 +104,7 @@ void tlm_mach_init_common (ram_addr_t ram_size,
     int kernel_size;
     int is_bigendian = 0; /* arm, mips, cris are little endian */
 #if defined(TARGET_ARM)
-    qemu_irq arm_irq[2];
+    static qemu_irq arm_irq[2];
 #endif           
 
     /* init CPUs */

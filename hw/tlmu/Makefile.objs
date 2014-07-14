@@ -1,0 +1,5 @@
+obj-y += tlm_mach.o
+obj-y += tlm_mem.o
+
+obj-$(CONFIG_FDT_GENERIC) += tlm_zynq.o
+
