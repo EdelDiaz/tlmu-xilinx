@@ -262,7 +262,7 @@ static void tlm_zynq_init(QEMUMachineInitArgs *args)
         exit(1);
     }
 
-    tlm_map(cs->env_ptr, 0x40000000ULL, 0xBFFFFFFFULL,
+    tlm_map(cs->env_ptr, 0x40000000ULL, 0x7FFFFFFFULL,
             tlm_sync_period_ns, irqs, 16, NULL);  
 
     tlm_register_rams();
