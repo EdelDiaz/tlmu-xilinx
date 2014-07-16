@@ -97,13 +97,15 @@ static uint64_t cadence_timer_get_ns(CadenceTimerState *s, uint64_t timer_steps)
      * (or overflow can happen below) */
     assert(timer_steps <= 1ULL << 32);
 
+    uint64_t f = s->freq;
     uint64_t r = timer_steps * 1000000000ULL;
     if (s->reg_clock & CLOCK_CTRL_PS_EN) {
         r >>= 16 - (((s->reg_clock & CLOCK_CTRL_PS_V) >> 1) + 1);
     } else {
         r >>= 16;
     }
-    r /= (uint64_t)s->freq;
+    if(!r) return 1;  /* avoid zero, can lead to endless timer loop */
+    r = (r - 1) / f + 1;   /* round up */
     return r;
 }
 
@@ -112,16 +114,17 @@ static uint64_t cadence_timer_get_steps(CadenceTimerState *s, uint64_t ns)
     uint64_t to_divide = 1000000000ULL;
 
     uint64_t r = ns;
+
      /* for very large intervals (> 8s) do some division first to stop
       * overflow (costs some prescision) */
     while (r >= 8ULL << 30 && to_divide > 1) {
-        r /= 1000;
+        r = (r+999) / 1000;
         to_divide /= 1000;
     }
     r <<= 16;
     /* keep early-dividing as needed */
     while (r >= 8ULL << 30 && to_divide > 1) {
-        r /= 1000;
+        r = (r+999) / 1000;
         to_divide /= 1000;
     }
     r *= (uint64_t)s->freq;
@@ -129,7 +132,8 @@ static uint64_t cadence_timer_get_steps(CadenceTimerState *s, uint64_t ns)
         r /= 1 << (((s->reg_clock & CLOCK_CTRL_PS_V) >> 1) + 1);
     }
 
-    r /= to_divide;
+    if (!r) return 1;
+    r = (r - 1) / to_divide + 1;
     return r;
 }
 
