@@ -128,6 +128,7 @@ struct MemoryRegion {
     bool terminates;
     bool readable;
     bool ram;
+    bool tlm;
     bool readonly; /* For RAM regions */
     bool enabled;
     bool rom_device;
@@ -365,6 +366,17 @@ bool memory_region_is_ram(MemoryRegion *mr);
 static inline bool memory_region_is_romd(MemoryRegion *mr)
 {
     return mr->rom_device && mr->readable;
+}
+
+/**
+ * memory_region_is_tlmu_ramd: check whether a memory region is RAMD in TLMu
+ *
+ * Returns %true is a memory region is RAMD defined in TLMu
+ *
+ * @mr: the memory region being queried
+ */
+static inline bool memory_region_is_tlmu_ramd(MemoryRegion *mr){
+    return mr->ops && mr->ram && mr->tlm;
 }
 
 /**

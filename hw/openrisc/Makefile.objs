@@ -1,2 +1,4 @@
 obj-y = pic_cpu.o cputimer.o
+obj-y += tlm_mach.o tlm_mem.o
+obj-y += ptimer.o # required in tlm_mem.o
 obj-y += openrisc_sim.o 
