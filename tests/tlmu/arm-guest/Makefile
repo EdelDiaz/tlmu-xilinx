@@ -2,7 +2,7 @@ BASEDIR=../../..
 -include $(BASEDIR)/config-host.mak
 VPATH=$(SRC_PATH)/tests/tlmu/arm-guest
 
-CROSS  = arm-linux
+CROSS  = arm-none-eabi-
 
 CC      = $(CROSS)gcc
 CXX     = $(CROSS)g++
